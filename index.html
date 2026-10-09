@@ -1,121 +1,318 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Welcome to My Website</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robi & Airtel Login</title>
   <style>
-    /* CSS styling goes here */
     :root {
-      --primary-color: blue;
-      --heading-color: red;
+      --primary-color: #e3000f; /* Robi/Airtel red */
+      --secondary-color: #f2f2f2;
+      --text-color: #333;
       --font-size: 16px;
     }
     
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #fafafa;
+      color: var(--text-color);
     }
     
     .container {
-      width: 800px;
-      height: 400px;
-      background-color: #f2f2f2;
-      margin: 0 auto;
-      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      background-color: #ffffff;
+      padding: 30px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      box-sizing: border-box;
+      text-align: center;
     }
     
     h1 {
-      color: var(--heading-color);
+      color: var(--primary-color);
       font-size: 24px;
-      text-align: center;
+      margin-bottom: 20px;
     }
     
     p {
       font-size: var(--font-size);
+      margin-bottom: 20px;
     }
-    
-    ul li:first-child {
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
       font-weight: bold;
     }
-    
-    img {
-      width: 200px;
-      height: 150px;
-    }
-    
-    table {
+
+    input[type="text"], input[type="tel"] {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    
-    th, td {
+      padding: 12px;
       border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #c2000c;
     }
     
-    tbody tr:hover {
-      background-color: #e6e6e6;
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .success {
+      color: green;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
     }
     
-    thead {
-      background-color: #ddd;
+    .loader {
+      display: none;
+      margin-top: 10px;
+      font-style: italic;
+      color: #666;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to My Website</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <ul>
-      <li>First item</li>
-      <li>Second item</li>
-      <li>Third item</li>
-      <li>Fourth item</li>
-      <li>Fifth item</li>
-    </ul>
-    <img src="img/ig.jpg" alt="img/ig.jpg">
-    <table>
-      <thead>
-        <tr>
-          <th>Column 1</th>
-          <th>Column 2</th>
-          <th>Column 3</th>
-          <th>Column 4</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Row 1, Cell 1</td>
-          <td>Row 1, Cell 2</td>
-          <td>Row 1, Cell 3</td>
-          <td>Row 1, Cell 4</td>
-        </tr>
-        <tr>
-          <td>Row 2, Cell 1</td>
-          <td>Row 2, Cell 2</td>
-          <td>Row 2, Cell 3</td>
-          <td>Row 2, Cell 4</td>
-        </tr>
-        <tr>
-          <td>Row 3, Cell 1</td>
-          <td>Row 3, Cell 2</td>
-          <td>Row 3, Cell 3</td>
-          <td>Row 3, Cell 4</td>
-        </tr>
-        <tr>
-          <td>Row 4, Cell 1</td>
-          <td>Row 4, Cell 2</td>
-          <td>Row 4, Cell 3</td>
-          <td>Row 4, Cell 4</td>
-        </tr>
-        <tr>
-          <td>Row 5, Cell 1</td>
-          <td>Row 5, Cell 2</td>
-          <td>Row 5, Cell 3</td>
-          <td>Row 5, Cell 4</td>
-        </tr>
-      </tbody>
-    </table>
+    <h1>Welcome</h1>
+
+    <!-- Phone Entry View -->
+    <div id="phone-view" class="view active">
+      <p>Login with your Robi or Airtel number</p>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="018XXXXXXXX or 016XXXXXXXX" maxlength="11">
+        <div id="phone-error" class="error"></div>
+      </div>
+      <button id="btn-next">Next</button>
+      <div id="phone-loader" class="loader">Loading...</div>
+    </div>
+
+    <!-- OTP Entry View -->
+    <div id="otp-view" class="view">
+      <p>Enter the OTP sent to <span id="display-phone"></span></p>
+      <div class="form-group">
+        <label for="otp">OTP</label>
+        <input type="text" id="otp" placeholder="Enter OTP" maxlength="6">
+        <div id="otp-error" class="error"></div>
+      </div>
+      <button id="btn-verify">Verify OTP</button>
+      <button id="btn-back" style="background-color: #666; margin-top: 10px;">Back</button>
+      <div id="otp-loader" class="loader">Verifying...</div>
+    </div>
+
+    <!-- Subscribed View -->
+    <div id="subscribed-view" class="view">
+      <h2 style="color: green;">Successfully Subscribed!</h2>
+      <p>Welcome to the premium content.</p>
+      <button id="btn-unsubscribe" style="background-color: #d9534f;">Unsubscribe</button>
+      <div id="unsub-loader" class="loader">Processing...</div>
+    </div>
   </div>
+
+  <script>
+    // Syltech API Mock
+    const syltechAPI = {
+      check_subscription: (phone) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            // Mock: let's say numbers ending in '1' are already subscribed
+            const isSubscribed = phone.endsWith('1');
+            resolve({ subscribed: isSubscribed });
+          }, 500);
+        });
+      },
+      send_otp: (phone) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({ success: true, message: "OTP sent" });
+          }, 500);
+        });
+      },
+      verify_otp: (phone, otp) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (otp === '123456') {
+              resolve({ success: true, message: "OTP verified" });
+            } else {
+              reject({ success: false, message: "Invalid OTP" });
+            }
+          }, 500);
+        });
+      },
+      unsubscribe: (phone) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({ success: true, message: "Unsubscribed successfully" });
+          }, 500);
+        });
+      }
+    };
+
+    // UI Elements
+    const phoneView = document.getElementById('phone-view');
+    const otpView = document.getElementById('otp-view');
+    const subscribedView = document.getElementById('subscribed-view');
+
+    const phoneInput = document.getElementById('phone');
+    const phoneError = document.getElementById('phone-error');
+    const btnNext = document.getElementById('btn-next');
+    const phoneLoader = document.getElementById('phone-loader');
+
+    const displayPhone = document.getElementById('display-phone');
+    const otpInput = document.getElementById('otp');
+    const otpError = document.getElementById('otp-error');
+    const btnVerify = document.getElementById('btn-verify');
+    const btnBack = document.getElementById('btn-back');
+    const otpLoader = document.getElementById('otp-loader');
+
+    const btnUnsubscribe = document.getElementById('btn-unsubscribe');
+    const unsubLoader = document.getElementById('unsub-loader');
+
+    let currentPhone = '';
+
+    function showView(view) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      view.classList.add('active');
+    }
+
+    function showError(element, message) {
+      element.textContent = message;
+      element.style.display = 'block';
+    }
+
+    function hideError(element) {
+      element.style.display = 'none';
+    }
+
+    btnNext.addEventListener('click', async () => {
+      const phone = phoneInput.value.trim();
+      hideError(phoneError);
+
+      if (!phone) {
+        showError(phoneError, 'Phone number is required.');
+        return;
+      }
+
+      // Validating Robi (018) or Airtel (016)
+      const regex = /^(018|016)\d{8}$/;
+      if (!regex.test(phone)) {
+        showError(phoneError, 'Please enter a valid Robi (018) or Airtel (016) number.');
+        return;
+      }
+
+      currentPhone = phone;
+      phoneLoader.style.display = 'block';
+      btnNext.disabled = true;
+
+      try {
+        const subRes = await syltechAPI.check_subscription(currentPhone);
+        if (subRes.subscribed) {
+          showView(subscribedView);
+        } else {
+          await syltechAPI.send_otp(currentPhone);
+          displayPhone.textContent = currentPhone;
+          showView(otpView);
+        }
+      } catch (err) {
+        showError(phoneError, 'An error occurred.');
+      } finally {
+        phoneLoader.style.display = 'none';
+        btnNext.disabled = false;
+      }
+    });
+
+    btnBack.addEventListener('click', () => {
+      showView(phoneView);
+      otpInput.value = '';
+      hideError(otpError);
+    });
+
+    btnVerify.addEventListener('click', async () => {
+      const otp = otpInput.value.trim();
+      hideError(otpError);
+
+      if (!otp) {
+        showError(otpError, 'OTP is required.');
+        return;
+      }
+
+      otpLoader.style.display = 'block';
+      btnVerify.disabled = true;
+
+      try {
+        await syltechAPI.verify_otp(currentPhone, otp);
+        showView(subscribedView);
+      } catch (err) {
+        showError(otpError, err.message || 'Invalid OTP. Try 123456');
+      } finally {
+        otpLoader.style.display = 'none';
+        btnVerify.disabled = false;
+      }
+    });
+
+    btnUnsubscribe.addEventListener('click', async () => {
+      unsubLoader.style.display = 'block';
+      btnUnsubscribe.disabled = true;
+
+      try {
+        await syltechAPI.unsubscribe(currentPhone);
+        alert('You have been unsubscribed.');
+        phoneInput.value = '';
+        otpInput.value = '';
+        showView(phoneView);
+      } catch (err) {
+        alert('An error occurred during unsubscription.');
+      } finally {
+        unsubLoader.style.display = 'none';
+        btnUnsubscribe.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
